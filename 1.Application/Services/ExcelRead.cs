@@ -2,7 +2,6 @@ using _1.Application.DTOs.Employees;
 using Microsoft.AspNetCore.Http;
 using OfficeOpenXml;
 using static OfficeOpenXml.ExcelPackage;
-using LicenseContext = OfficeOpenXml.LicenseContext;
 public class ExcelRead
 {
 
@@ -10,7 +9,7 @@ public class ExcelRead
 
     public async Task<List<EmployeeImportDto>> ReadExcelAsync(IFormFile file)
     {
-        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+     
         var empleados = new List<EmployeeImportDto>();
         using var stream = new MemoryStream();
         await file.CopyToAsync(stream);

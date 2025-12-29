@@ -8,8 +8,8 @@ public class EmployeeDepartment
     public decimal Salary { get; set; }
     public Status EmployeeStatus { get; set; }
     
-    public Employee Employee { get; set; } = new Employee();
-    public Department Department { get; set; } = new Department();
+    public Employee Employee { get; set; }
+    public Department Department { get; set; }
 }
 public enum Status
 {

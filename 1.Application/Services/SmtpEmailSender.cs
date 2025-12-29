@@ -15,7 +15,7 @@ public class SmtpEmailSender : IEmailSender
     {
         var smtpHost = _configuration["Smtp:Host"];
         var smtpPort = int.Parse(_configuration["Smtp:Port"] ?? "25");
-        var smtpUser = _configuration["Smtp:Username"];
+        var smtpUser = _configuration["Smtp:User"];
         var smtpPass = _configuration["Smtp:Password"];
         var fromEmail = _configuration["Smtp:From"];
         using var client = new SmtpClient(smtpHost, smtpPort)
@@ -30,7 +30,15 @@ public class SmtpEmailSender : IEmailSender
             Body = body,
             IsBodyHtml = true
         };
-        mailMessage.To.Add(to);
-        await client.SendMailAsync(mailMessage);
+        try
+        {
+            mailMessage.To.Add(to);
+            await client.SendMailAsync(mailMessage);
+        }
+        catch 
+        {
+            return;
+        }
+        
     }
 }

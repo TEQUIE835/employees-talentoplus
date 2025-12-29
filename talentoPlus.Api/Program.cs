@@ -1,9 +1,16 @@
 using _1.Application;
 using _3.Infrastructure;
 using Microsoft.OpenApi.Models;
+using OfficeOpenXml;
+using QuestPDF.Infrastructure;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
+QuestPDF.Settings.License = LicenseType.Community;
+
+/*
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;*/
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

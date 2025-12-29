@@ -20,7 +20,7 @@ public class EmployeeRepository : IEmployeeRepository
 
     public async Task<Employee?> GetByEmailAsync(string email)
     {
-        return await _context.Employees.FirstOrDefaultAsync(e => e.Email == Email.Create(email));
+        return await _context.Employees.FirstOrDefaultAsync(e => e.Email.Value == email);
     }
 
     public async Task<Employee?> GetByDocumentAsync(string document)
@@ -54,7 +54,7 @@ public class EmployeeRepository : IEmployeeRepository
 
     public async Task<bool> ExistsByEmailAsync(string email)
     {
-        return await _context.Employees.AnyAsync(e => e.Email == Email.Create(email));
+        return await _context.Employees.AnyAsync(e => e.Email.Value.ToString() == email);
     }
 
     public async Task<bool> ExistsByDocumentAsync(string document)

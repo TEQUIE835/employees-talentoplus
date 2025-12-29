@@ -61,6 +61,9 @@ public static class DependencyInjection
         services.AddScoped<EmployeeServices>();
         services.AddScoped<DepartmentService>();
         services.AddScoped<EducationalLevelService>();
+        services.AddScoped<CvPdfGeneratorService>();
+        services.AddScoped<ExcelRead>();
+        services.AddScoped<ImportExcelService>();
         return services;
     }
 }

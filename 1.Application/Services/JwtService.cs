@@ -34,6 +34,8 @@ public class JwtService : IJwtService
         {
             Subject = new ClaimsIdentity(claims),
             Expires = DateTime.UtcNow.AddMinutes(_TokenExpirationInMinutes),
+            Issuer = _issuer,
+            Audience = _audience,
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
         var token = tokenHandler.CreateToken(tokenDescriptor);

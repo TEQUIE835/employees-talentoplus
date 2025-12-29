@@ -34,13 +34,17 @@ public class EmployeeServices
 
     public async Task RegisterEmployeeAsync(EmployeeRegisterDto newEmployeeDto)
     {
+        Console.WriteLine("Consolaso-1");
         var existingByEmail = await _employeeRepository.ExistsByEmailAsync(newEmployeeDto.Email);
+        Console.WriteLine("consolaso");
         if (existingByEmail)
             throw new ArgumentException("El email ya está en uso.");
         var existingByDocument = await _employeeRepository.ExistsByDocumentAsync(newEmployeeDto.Document);
+        Console.WriteLine("Consolaso2");
         if (existingByDocument) 
             throw new ArgumentException("El documento ya está en uso.");
         var hashedPassword = _passwordHasher.Hash(newEmployeeDto.Password);
+        Console.WriteLine("Consolaso3");
         var employee = new Employee
         {
             FirstName = newEmployeeDto.FirstName,
@@ -55,7 +59,9 @@ public class EmployeeServices
             EducationalLevelId = newEmployeeDto.EducationalLevelId,
             ProfessionalProfile = newEmployeeDto.ProfessionalProfile,
         };
+        Console.WriteLine(employee.Email);
         employee = await _employeeRepository.AddAsync(employee);
+        Console.WriteLine("ConsolasoID" + employee.Id);
         var employeeDepartment = new EmployeeDepartment
         {
             EmployeeId = employee.Id,
@@ -64,6 +70,7 @@ public class EmployeeServices
             Position = newEmployeeDto.Position,
             EmployeeStatus = Status.Active
         };
+        Console.WriteLine("consolasodepartment" + employee.Email.Value);
         await _employeeDepartmentRepository.AddAsync(employeeDepartment);
         string template =
             "<!DOCTYPE html>\n<html lang=\"es\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>Bienvenido a Nuestra Plataforma</title>\n    <style>\n        body {{ font-family: Arial, sans-serif; background-color: #f5f5f5; margin: 0; padding: 0; }}\n        .container {{ max-width: 600px; background-color: #fff; margin: 40px auto; padding: 30px; border-radius: 8px; box-shadow: 0px 4px 10px rgba(0,0,0,0.1); }}\n        h1 {{ color: #333; text-align: center; }}\n        p {{ font-size: 16px; color: #555; line-height: 1.5; }}\n        .footer {{ font-size: 12px; color: #aaa; text-align: center; margin-top: 30px; }}\n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <h1>¡Bienvenido a Nuestra Plataforma!</h1>\n        <p>Hola <strong>{NombreEmpleado}</strong>,</p>\n        <p>Tu cuenta ha sido creada exitosamente. Ya puedes iniciar sesión y empezar a explorar nuestra plataforma.</p>\n        <p>¡Nos alegra tenerte con nosotros!</p>\n        <div class=\"footer\">\n            &copy; 2025 Nuestra Plataforma. Todos los derechos reservados.\n        </div>\n    </div>\n</body>\n</html>\n";
