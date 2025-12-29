@@ -1,119 +1,141 @@
-# TalentoPlus S.A.S. - Sistema de Gestión de Empleados
+# Employees – TalentoPlus API
 
-Sistema de gestión de empleados para TalentoPlus S.A.S. Permite centralizar la información de empleados, subir datos desde Excel, generar hojas de vida en PDF y exponer una API REST para autoregistro y login.
+Sistema backend desarrollado en **C# (.NET 9)** para la **gestión de empleados y candidatos**, orientado a procesos de **contratación futura**.  
+La aplicación expone una **API RESTful** que permite administrar información de usuarios, importar datos desde archivos Excel, generar hojas de vida en PDF y notificar eventos relevantes mediante correo electrónico.
 
-## Tecnologías
+---
 
-- ASP.NET Core 7
-- Entity Framework Core
-- PostgreSQL
-- QuestPDF (generación de PDFs)
-- xUnit + Moq (pruebas unitarias)
-- Docker & Docker Compose
+## 🚀 Funcionalidades principales
 
-## Requisitos
+- Gestión de empleados y candidatos
+- Importación masiva de información desde archivos Excel
+- Generación automática de hojas de vida en PDF
+- Notificaciones por correo electrónico ante eventos del sistema
+- API RESTful segura y escalable
+- Autenticación y autorización con JWT
+- Persistencia de datos mediante Entity Framework Core y MySQL
+- Pruebas unitarias para asegurar calidad del código
 
-- .NET 7 SDK
-- Docker
-- Docker Compose
+---
 
-## Variables de entorno
+## 📊 Importación de datos desde Excel
 
-Configura las siguientes variables (ejemplo en `.env`):
+El sistema permite cargar información de empleados a partir de archivos Excel:
 
-```
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-POSTGRES_DB=talentoplus
-JWT_SECRET=mi_clave_secreta
-SMTP_HOST=smtp.example.com
-SMTP_PORT=587
-SMTP_USER=user@example.com
-SMTP_PASSWORD=password
-```
+- Mapeo de hojas de cálculo usando EPPlus
+- Validación de datos antes de persistirlos
+- Conversión de filas de Excel a DTOs
+- Inserción segura en base de datos
 
-## Cómo correr la solución
+Este proceso facilita la carga masiva de candidatos provenientes de fuentes externas como procesos de reclutamiento o migraciones de datos.
 
-### Con Docker Compose
+---
 
-```
-docker-compose up --build
-```
+## 📄 Generación de hojas de vida (PDF)
 
-- La API estará disponible en `http://localhost:5000/api`
-- La Web estará disponible en `http://localhost:5000`
+A partir de la información almacenada del empleado, el sistema:
 
-### Sin Docker
+- Construye documentos PDF dinámicos usando QPdf
+- Genera hojas de vida estructuradas y exportables
+- Permite estandarizar formatos para procesos de selección
 
-1. Crear la base de datos PostgreSQL y configurar connection string.
-2. Restaurar paquetes:
+---
 
-```
-dotnet restore
-```
+## 📧 Notificaciones por correo electrónico
 
-3. Aplicar migraciones:
+El sistema integra un servicio SMTP que permite:
 
-```
-dotnet ef database update --project 2.Infrastructure --startup-project 1.Web
-```
+- Enviar correos automáticos cuando se crea un nuevo usuario
+- Notificar eventos importantes del ciclo de vida del empleado
+- Facilitar la comunicación en procesos de contratación
 
-4. Ejecutar Web y API:
+---
 
-```
-dotnet run --project 1.Web
-```
+## 🔐 Autenticación y seguridad
 
+La API utiliza JWT (JSON Web Tokens) para proteger los endpoints.
 
-## Ejecutar pruebas unitarias
+Flujo de seguridad:
+1. Autenticación del usuario y emisión de token JWT
+2. Envío del token en cada request mediante:
 
 ```
-dotnet test
+Authorization: Bearer {token}
 ```
 
-## Funcionalidades principales implementadas
+3. Validación de firma, expiración y claims
 
-- Registro de empleados desde la API
-- Login de empleados con JWT
-- Gestión de empleados desde la web (CRUD)
-- Importación de empleados desde Excel
-- Generación de hoja de vida en PDF
+---
 
-**Nota:** La integración con IA y el dashboard avanzado están pendientes.
+## 🧱 Arquitectura
 
-## Docker Compose básico
+El proyecto está estructurado siguiendo principios de diseño orientados a mantenibilidad:
+
+- Controllers: Exposición de endpoints REST
+- Services: Lógica de negocio
+- DTOs: Contratos de entrada y salida
+- Persistence: Acceso a datos con EF Core
+- Security: Autenticación JWT
+- Infrastructure: Integraciones externas (SMTP, PDF, Excel)
+- Tests: Pruebas unitarias
+
+Este enfoque facilita la escalabilidad y futuras integraciones empresariales.
+
+---
+
+## 🧪 Pruebas unitarias
+
+Incluye pruebas unitarias para validar:
+- Lógica de negocio
+- Procesos de importación
+- Comportamiento de servicios críticos
+
+Esto permite detectar errores tempranamente y asegurar estabilidad.
+
+---
+
+## 🛠️ Tecnologías utilizadas
+
+- Lenguaje: C#
+- Framework: .NET 9
+- API: ASP.NET Web API
+- ORM: Entity Framework Core
+- Base de datos: MySQL
+- Autenticación: JWT
+- Excel: EPPlus
+- PDF: QPdf
+- Correo: SMTP
+- Testing: Pruebas unitarias
+- Control de versiones: Git
+
+---
+
+## ▶️ Ejecución del proyecto
+
+1. Clonar el repositorio:
 
 ```
-version: '3.8'
-services:
-db:
-image: postgres:15
-restart: always
-environment:
-POSTGRES_USER: ${POSTGRES_USER}
-POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-POSTGRES_DB: ${POSTGRES_DB}
-ports:
-- "5432:5432"
-volumes:
-- pgdata:/var/lib/postgresql/data
-
-web:
-build:
-context: .
-dockerfile: 1.Web/Dockerfile
-environment:
-- ConnectionStrings__DefaultConnection=Host=db;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
-- JWT_SECRET=${JWT_SECRET}
-- SMTP_HOST=${SMTP_HOST}
-- SMTP_PORT=${SMTP_PORT}
-- SMTP_USER=${SMTP_USER}
-- SMTP_PASSWORD=${SMTP_PASSWORD}
-depends_on:
-- db
-ports:
-- "5000:5000"
-
-volumes:
-pgdata:
+git clone https://github.com/TEQUIE835/employees-talentoplus.git
 ```
+
+2. Configurar en appsettings.json:
+- Cadena de conexión MySQL
+- Credenciales SMTP
+
+3. Ejecutar migraciones:
+
+```
+dotnet ef database update
+```
+
+4. Ejecutar la aplicación:
+
+```
+dotnet run
+```
+
+---
+
+## 📌 Notas finales
+
+Este proyecto fue desarrollado como parte de un proceso de formación avanzada en backend, simulando escenarios empresariales reales como importación masiva de datos, generación de documentos y notificaciones automáticas, aplicando buenas prácticas de arquitectura y seguridad.
